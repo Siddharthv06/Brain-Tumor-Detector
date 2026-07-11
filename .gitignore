@@ -1,0 +1,21 @@
+# Models
+model.keras
+*.keras
+*.h5
+
+# Python environment
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data & Uploads
+Dataset/
+uploads/
+
+# IDE and System Files
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

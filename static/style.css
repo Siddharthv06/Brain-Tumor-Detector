@@ -1,0 +1,1115 @@
+:root {
+    /* Color Palette - Warm Clinical Paper */
+    --bg-base: #f7f6f2;
+    /* Eggshell/Warm Alabaster */
+    --bg-sheet: #ffffff;
+    /* Crisp white paper sheet */
+    --bg-field: #fdfdfb;
+    --border-ink: #1c1e21;
+    /* Charcoal black ink */
+    --border-faint: #e5e3dc;
+    /* Thin pencil rule */
+    --border-glow: rgba(30, 64, 175, 0.15);
+
+    --text-primary: #1c1e21;
+    /* Ink primary */
+    --text-secondary: #5a5d62;
+    /* Pencil gray */
+    --text-muted: #888b90;
+    /* Faint gray */
+
+    --primary: #1e40af;
+    /* Medical blue */
+    --primary-hover: #1e3a8a;
+    --primary-bg: #eff6ff;
+
+    --success: #15803d;
+    /* Sage clinic green */
+    --success-bg: #f0fdf4;
+    --warning: #b45309;
+    /* Ochre warning */
+    --danger: #b91c1c;
+    /* Crimson alert */
+
+    --radius-paper: 4px;
+    /* Crisp clinical paper edges */
+    --radius-ink: 6px;
+
+    --shadow-sheet: 0 1px 3px rgba(28, 30, 33, 0.05),
+        0 15px 45px -10px rgba(28, 30, 33, 0.1),
+        0 5px 15px -5px rgba(28, 30, 33, 0.05);
+
+    --transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    /* Paper Grain Texture overlay */
+    --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-base);
+    background-image: var(--paper-texture);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    line-height: 1.5;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Header Styles - Printed Document Header */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--border-ink);
+    background: transparent;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-icon {
+    font-size: 32px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-family: 'Lora', 'Georgia', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
+
+.accent-text {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+
+.brand-tagline {
+    font-family: 'SFMono-Regular', Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-ink);
+    padding: 6px 12px;
+    background: var(--bg-sheet);
+    box-shadow: 2px 2px 0 var(--border-ink);
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-text {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-primary);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+}
+
+/* Dashboard Grid - Two Stacked Sheets */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr;
+    gap: 32px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Sheet Card Styles */
+.panel {
+    background-color: var(--bg-sheet);
+    background-image: var(--paper-texture);
+    border: 1px solid var(--border-faint);
+    border-bottom: 2px solid #d4d2cc;
+    border-radius: var(--radius-paper);
+    padding: 36px;
+    box-shadow: var(--shadow-sheet);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Simulated slightly askew/human overlay */
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--border-ink);
+}
+
+.panel-header {
+    border-bottom: 1px solid var(--border-faint);
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+}
+
+.panel-header h2 {
+    font-family: 'Lora', 'Georgia', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.panel-header p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Form Styles */
+#upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Drag & Drop Area - Styled like a stamped cutout slot */
+.drop-zone {
+    border: 2px dashed var(--border-ink);
+    background-color: var(--bg-field);
+    border-radius: var(--radius-paper);
+    padding: 50px 24px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+    background-color: var(--primary-bg);
+    border-color: var(--primary);
+}
+
+.drop-zone input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-icon {
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    transition: var(--transition);
+}
+
+.drop-zone:hover .upload-icon {
+    transform: translateY(-4px) scale(1.05);
+    color: var(--primary);
+}
+
+.drop-zone-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.browse-btn {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.file-limits {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+/* Selected File Details */
+.file-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-field);
+    border: 1px solid var(--border-ink);
+    padding: 12px 16px;
+    border-radius: var(--radius-paper);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.05);
+    animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.file-icon {
+    font-size: 20px;
+}
+
+.file-name {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-grow: 1;
+}
+
+.remove-file {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: var(--transition);
+}
+
+.remove-file:hover {
+    color: var(--danger);
+    transform: scale(1.2);
+}
+
+/* Premium Human Touch Buttons */
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 30px;
+    border-radius: var(--radius-paper);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid var(--border-ink);
+    background: var(--bg-sheet);
+    color: var(--text-primary);
+    box-shadow: 3px 3px 0 var(--border-ink);
+    position: relative;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--border-ink);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--border-ink);
+}
+
+.btn-primary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--border-ink);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-loader {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Empty State / Report Waiting Cover */
+.empty-state {
+    min-height: 420px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed var(--border-faint);
+    background: rgba(253, 253, 251, 0.5);
+}
+
+.empty-state-content {
+    max-width: 380px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 60px;
+    filter: grayscale(1);
+    opacity: 0.4;
+    animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-8px) rotate(1deg);
+    }
+}
+
+.empty-state-content h3 {
+    font-family: 'Lora', 'Georgia', serif;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.empty-state-content p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Diagnostic Results - Human Print Style */
+.results-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 32px;
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 650px) {
+    .results-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.results-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.scan-preview-wrapper {
+    position: relative;
+    border-radius: var(--radius-paper);
+    overflow: hidden;
+    border: 2px solid var(--border-ink);
+    aspect-ratio: 1;
+    background: #000;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.scan-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.scan-overlay {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: var(--bg-sheet);
+    border: 1px solid var(--border-ink);
+    padding: 3px 8px;
+    box-shadow: 2px 2px 0 var(--border-ink);
+}
+
+.scan-status {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Stamped Medical Diagnosis */
+.primary-diagnosis {
+    background: var(--bg-field);
+    border: 1px solid var(--border-ink);
+    border-radius: var(--radius-paper);
+    padding: 20px;
+    position: relative;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.02);
+}
+
+.primary-diagnosis .label {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Rotated Ink Stamp for "Human-Made" feel */
+.diagnosis-class {
+    font-family: 'Lora', 'Georgia', serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--danger);
+    border: 3px double var(--danger);
+    padding: 6px 16px;
+    border-radius: var(--radius-paper);
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transform: rotate(-3deg);
+    margin: 8px 0;
+    box-shadow: 0 0 0 2px var(--bg-sheet);
+    background: var(--bg-sheet);
+}
+
+/* Color themes for diagnosis ink stamps */
+.diagnosis-class.no-tumor {
+    color: var(--success);
+    border-color: var(--success);
+}
+
+.diagnosis-class.glioma {
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.diagnosis-class.meningioma {
+    color: var(--warning);
+    border-color: var(--warning);
+}
+
+.diagnosis-class.pituitary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.confidence-badge {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 10px;
+    border-top: 1px dotted var(--border-faint);
+    padding-top: 8px;
+}
+
+.conf-value {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.conf-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* Detailed Reports details */
+.results-details {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.info-card {
+    background: var(--bg-field);
+    border: 1px solid var(--border-ink);
+    border-left: 6px solid var(--border-ink);
+    border-radius: var(--radius-paper);
+    padding: 20px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.02);
+}
+
+.info-card h4 {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.info-card p {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Probability Distribution Chart - Styled like a patient progress record */
+.probability-breakdown h4 {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.chart-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.row-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.class-name {
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+}
+
+.class-value {
+    color: var(--text-primary);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+}
+
+.progress-bar-container {
+    height: 12px;
+    background: var(--bg-base);
+    border: 1.5px solid var(--border-ink);
+    border-radius: 0;
+    /* Boxy clinical record look */
+    overflow: hidden;
+    padding: 1.5px;
+}
+
+@keyframes fill-bar {
+    from {
+        width: 0;
+    }
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--border-ink);
+    /* Solid ink fills */
+    animation: fill-bar 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Make class values colored depending on order */
+.chart-row:nth-child(1) .progress-bar-fill {
+    background-color: #2563eb;
+}
+
+/* Primary Blue */
+.chart-row:nth-child(2) .progress-bar-fill {
+    background-color: #4f46e5;
+}
+
+.chart-row:nth-child(3) .progress-bar-fill {
+    background-color: var(--success);
+}
+
+/* Sage green */
+.chart-row:nth-child(4) .progress-bar-fill {
+    background-color: #7c3aed;
+}
+
+/* Printed footer */
+.app-footer {
+    text-align: center;
+    padding: 20px 0;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    border-top: 1px dotted var(--border-ink);
+    margin-top: 20px;
+}
+
+/* Dossier Metadata Header */
+.dossier-header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    border-bottom: 2px dashed var(--border-ink);
+}
+
+.dossier-meta-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.meta-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.meta-label {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.meta-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.text-success {
+    color: var(--success) !important;
+}
+
+/* Technical Specification Table */
+.tech-specs {
+    margin-top: 16px;
+}
+
+.tech-specs h4 {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: var(--bg-field);
+    border: 1px solid var(--border-faint);
+}
+
+.specs-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-faint);
+}
+
+.specs-table tr:last-child td {
+    border-bottom: none;
+}
+
+.specs-table td:first-child {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    color: var(--text-muted);
+    font-weight: 600;
+    width: 40%;
+}
+
+.specs-table td:last-child {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: right;
+}
+
+/* Error warning banner styling */
+.error-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fef2f2;
+    border: 2px solid var(--danger);
+    padding: 16px;
+    border-radius: var(--radius-paper);
+    color: var(--danger);
+    margin-bottom: 24px;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 3px 3px 0 var(--danger);
+}
+
+.error-icon {
+    font-size: 24px;
+}
+
+.error-text {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Secondary Button - Print Clinical Report */
+.btn-secondary {
+    background: var(--bg-sheet);
+    border: 2px solid var(--border-ink);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-base);
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--border-ink);
+}
+
+.btn-secondary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--border-ink);
+}
+
+.btn-print {
+    margin-top: 16px;
+}
+
+/* Multi-Scan Layout (Original + Grad-CAM) */
+.scans-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 480px) {
+    .scans-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* History Log Panel and Table */
+.history-panel {
+    background-color: var(--bg-sheet);
+    border: 1px solid var(--border-faint);
+    padding: 24px;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+.history-table th,
+.history-table td {
+    padding: 12px 16px;
+    border-bottom: 1.5px solid var(--border-faint);
+}
+
+.history-table th {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-muted);
+    background-color: var(--bg-field);
+    border-top: 1px solid var(--border-ink);
+    border-bottom: 2px solid var(--border-ink);
+}
+
+.history-table tr:hover td {
+    background-color: var(--bg-field);
+}
+
+/* Clinical Stamps/Badges inside History Log */
+.badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 2px;
+    border: 1.5px solid currentColor;
+    background-color: var(--bg-sheet);
+}
+
+.badge.no-tumor {
+    color: var(--success);
+    background-color: var(--success-bg);
+}
+
+.badge.glioma {
+    color: var(--danger);
+    background-color: #fef2f2;
+}
+
+.badge.meningioma {
+    color: var(--warning);
+    background-color: #fffbeb;
+}
+
+.badge.pituitary {
+    color: var(--primary);
+    background-color: var(--primary-bg);
+}
+
+/* Dashboard Telemetry Banner Metrics Row */
+.metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .metrics-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .metrics-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.metric-card {
+    background-color: var(--bg-sheet);
+    border: 1px solid var(--border-faint);
+    border-radius: var(--radius-paper);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sheet);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--primary);
+}
+
+.metric-card:nth-child(2)::before {
+    background: #a855f7; /* Electric violet */
+}
+
+.metric-card:nth-child(3)::before {
+    background: var(--warning);
+}
+
+.metric-card:nth-child(4)::before {
+    background: var(--danger);
+}
+
+.metric-label {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.metric-value {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+/* Sci-Fi Target Bounding Corners (HUD) */
+.hud-bracket {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--primary);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.hud-bracket.top-left {
+    top: 12px;
+    left: 12px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.hud-bracket.top-right {
+    top: 12px;
+    right: 12px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.hud-bracket.bottom-left {
+    bottom: 12px;
+    left: 12px;
+    border-right: none;
+    border-top: none;
+}
+
+.hud-bracket.bottom-right {
+    bottom: 12px;
+    right: 12px;
+    border-left: none;
+    border-top: none;
+}
+
+/* Global Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Print Overrides - Styles for physical paper output */
+@media print {
+    body {
+        background-color: #ffffff !important;
+        background-image: none !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        font-size: 12pt;
+    }
+
+    .app-container {
+        max-width: 100% !important;
+        gap: 15px !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+    }
+
+    .panel {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        background: none !important;
+    }
+
+    .panel::before {
+        display: none !important;
+    }
+
+    .results-layout {
+        grid-template-columns: 1fr 1.2fr !important;
+        gap: 20px !important;
+    }
+
+    .scan-preview-wrapper {
+        border-color: #000000 !important;
+    }
+
+    .primary-diagnosis {
+        border-color: #000000 !important;
+    }
+
+    .diagnosis-class {
+        border-color: #000000 !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        transform: none !important;
+        margin: 4px 0 !important;
+        padding: 4px 10px !important;
+    }
+
+    .progress-bar-container {
+        border: 1px solid #000000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .progress-bar-fill {
+        background-color: #333333 !important;
+        background-image: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .info-card {
+        border-color: #000000 !important;
+    }
+
+    .app-footer {
+        border-top-color: #000000 !important;
+    }
+}

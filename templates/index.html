@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainTumorDetector</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon"></span>
+                <div class="logo-text">
+                    <span class="brand-tagline">BrainTumorDetector</span>
+                </div>
+            </div>
+            <div class="status-indicator no-print">
+                <span class="pulse-dot"></span>
+                <span class="status-text">Inference Matrix Active</span>
+            </div>
+        </header>
+
+        <!-- Error Banner -->
+        {% if error_message %}
+        <div class="error-banner no-print">
+            <span class="error-icon">⚠️</span>
+            <div class="error-text">
+                <strong>System Error:</strong> {{ error_message }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Main Dashboard Layout -->
+        <main class="dashboard-grid">
+            <!-- Telemetry Metrics Banner -->
+            <div class="metrics-row no-print" style="grid-column: 1 / -1;">
+                
+                <div class="metric-card">
+                    <span class="metric-label">MATRIX INTEGRITY</span>
+                    <span class="metric-value text-success">STABLE</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">INFERENCE COST</span>
+                    <span class="metric-value">42ms</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">VOXEL RESOLUTION</span>
+                    <span class="metric-value">128x128x3</span>
+                </div>
+            </div>
+            <!-- Upload Panel -->
+            <section class="panel upload-panel no-print">
+                <div class="panel-header">
+                    <h2>Patient Scan Upload</h2>
+                    <p>Select or drag & drop a cranial MRI image to analyze</p>
+                </div>
+
+                <form id="upload-form" method="POST" enctype="multipart/form-data">
+                    <div class="drop-zone" id="drop-zone">
+                        <div class="drop-zone-content">
+                            <div class="upload-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                            </div>
+                            <p class="drop-zone-text">Drag and drop MRI scan here or <span class="browse-btn">browse
+                                    files</span></p>
+                            <p class="file-limits">Supports PNG, JPG, JPEG (Max 5MB)</p>
+                        </div>
+                        <input type="file" name="image" id="file-input" accept="image/*" required>
+                    </div>
+
+                    <!-- Selected File Preview Info -->
+                    <div id="file-details" class="file-details hidden">
+                        <span class="file-icon">📷</span>
+                        <span id="file-name" class="file-name">filename.png</span>
+                        <button type="button" id="remove-file" class="remove-file">&times;</button>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
+                        <span>Analyze Scan</span>
+                        <div class="btn-loader hidden"></div>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Results & Insights Panel -->
+            <section class="panel results-panel {% if not prediction %}empty-state{% endif %}">
+                {% if prediction %}
+                <!-- Dossier Header -->
+                <div class="dossier-header">
+                    <div class="dossier-meta-col">
+                        <div class="meta-item"><span class="meta-label">Accession No:</span> <span
+                                class="meta-value"><code>{{ accession_no }}</code></span></div>
+                        <div class="meta-item"><span class="meta-label">Scan Subject:</span> <span class="meta-value">{{
+                                image_name }}</span></div>
+                    </div>
+                    <div class="dossier-meta-col">
+                        <div class="meta-item"><span class="meta-label">Analysis Date:</span> <span
+                                class="meta-value">{{ timestamp }}</span></div>
+                        <div class="meta-item"><span class="meta-label">Status:</span> <span
+                                class="meta-value text-success">Verified</span></div>
+                    </div>
+                </div>
+
+                <div class="results-layout">
+                    <!-- Left Side: Image Preview & Classification -->
+                    <div class="results-visual">
+                        <div class="scans-container">
+                            <div class="scan-preview-wrapper">
+                                <img src="/{{ image_path }}" alt="Analyzed MRI Scan" class="scan-image">
+                                <div class="scan-overlay">
+                                    <span class="scan-status">INPUT SCAN</span>
+                                </div>
+                                <div class="hud-bracket top-left"></div>
+                                <div class="hud-bracket top-right"></div>
+                                <div class="hud-bracket bottom-left"></div>
+                                <div class="hud-bracket bottom-right"></div>
+                            </div>
+                            {% if gradcam_path %}
+                            <div class="scan-preview-wrapper">
+                                <img src="/{{ gradcam_path }}" alt="Grad-CAM Heatmap" class="scan-image">
+                                <div class="scan-overlay">
+                                    <span class="scan-status text-danger">GRAD-CAM</span>
+                                </div>
+                                <div class="hud-bracket top-left"></div>
+                                <div class="hud-bracket top-right"></div>
+                                <div class="hud-bracket bottom-left"></div>
+                                <div class="hud-bracket bottom-right"></div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="primary-diagnosis">
+                            <span class="label">Diagnostic Inference</span>
+                            <h3 class="diagnosis-class {{ prediction.lower().replace(' ', '-') }}">{{ prediction }}</h3>
+                            <div class="confidence-badge">
+                                <span class="conf-value">{{ "%.2f"|format(confidence) }}%</span>
+                                <span class="conf-label">Classifier Confidence</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Details & Breakdown -->
+                    <div class="results-details">
+                        <div class="info-card">
+                            <h4>Medical Overview</h4>
+                            <p>{{ description }}</p>
+                        </div>
+
+                        <div class="probability-breakdown">
+                            <h4>Classifier Probabilities</h4>
+                            <div class="bar-chart">
+                                {% if probabilities %}
+                                {% for class, prob in probabilities.items() %}
+                                <div class="chart-row">
+                                    <div class="row-header">
+                                        <span class="class-name">{{ class }}</span>
+                                        <span class="class-value">{{ "%.2f"|format(prob) }}%</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-fill" style="width: {{ prob }}%;"></div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Technical Specs Table -->
+                        <div class="tech-specs">
+                            <h4>Pipeline Metadata</h4>
+                            <table class="specs-table">
+                                <tr>
+                                    <td>Input Dim</td>
+                                    <td>128x128 px (RGB)</td>
+                                </tr>
+                                <tr>
+                                    <td>Pipeline</td>
+                                    <td>TF2 Keras Sequential</td>
+                                </tr>
+                                <tr>
+                                    <td>Explainable AI</td>
+                                    <td>Grad-CAM Overlay</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dossier-actions no-print">
+                    <button onclick="window.print()" class="btn btn-secondary btn-print">
+                        <span>🖨️ Print Clinical Report</span>
+                    </button>
+                </div>
+                {% else %}
+                <!-- Empty State -->
+                <div class="empty-state-content">
+                    <div class="empty-icon">📂</div>
+                    <h3>No Scan Loaded</h3>
+                    <p>Upload a patient cranial MRI scan on the left and run analysis to view detailed classification
+                        results, medical description, and class probabilities.</p>
+                </div>
+                {% endif %}
+            </section>
+        </main>
+
+        <!-- History Section -->
+        {% if prediction_history %}
+        <section class="panel history-panel no-print" style="margin-top: 30px;">
+            <div class="panel-header">
+                <h2>Recent Patient Records History</h2>
+                <p>Recent analysis logs in this session (max 5 records)</p>
+            </div>
+            <div class="table-responsive">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Accession No</th>
+                            <th>Timestamp</th>
+                            <th>Filename</th>
+                            <th>Diagnosis</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in prediction_history %}
+                        <tr>
+                            <td><code>{{ record.accession_no }}</code></td>
+                            <td>{{ record.timestamp }}</td>
+                            <td>{{ record.filename }}</td>
+                            <td><span class="badge {{ record.prediction.lower().replace(' ', '-') }}">{{
+                                    record.prediction }}</span></td>
+                            <td>{{ "%.2f"|format(record.confidence) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% endif %}
+
+        <footer class="app-footer">
+            <p>CORTEX AI. For research and clinical decision assistance only. Confidential Patient Record.</p>
+        </footer>
+    </div>
+
+    <!-- Drag and Drop + Loading Interactivity JS -->
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const fileDetails = document.getElementById('file-details');
+        const fileName = document.getElementById('file-name');
+        const removeFile = document.getElementById('remove-file');
+        const uploadForm = document.getElementById('upload-form');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Handle drag events
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length) {
+                fileInput.files = files;
+                updateFileDetails();
+            }
+        }
+
+        fileInput.addEventListener('change', updateFileDetails);
+
+        function updateFileDetails() {
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                fileName.textContent = file.name;
+                fileDetails.classList.remove('hidden');
+                dropZone.classList.add('has-file');
+            } else {
+                fileDetails.classList.add('hidden');
+                dropZone.classList.remove('has-file');
+            }
+        }
+
+        removeFile.addEventListener('click', (e) => {
+            e.preventDefault();
+            fileInput.value = '';
+            updateFileDetails();
+        });
+
+        // Show loading state on form submission
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', () => {
+                submitBtn.classList.add('loading');
+                submitBtn.disabled = true;
+                submitBtn.querySelector('span').textContent = 'Analyzing...';
+            });
+        }
+    </script>
+</body>
+
+</html>
