@@ -96,6 +96,14 @@ Developed with senior developer safety patterns:
 
 ---
 
+## 🚀 Hugging Face Model Repository
+The trained model weights (`model.keras`) are hosted on Hugging Face to keep the Git repository lightweight.
+* **Model URL**: [Siddharthv06/BrainTumorAI](https://huggingface.co/Siddharthv06/BrainTumorAI)
+
+The web application handles model retrieval automatically. If `model.keras` is not found locally, the portal will download the weights directly from Hugging Face on its first run.
+
+---
+
 ## 🚀 Installation & Execution Guide
 
 ### Prerequisites
@@ -119,16 +127,23 @@ Developed with senior developer safety patterns:
 
 ### Execution
 * **To train the model**:
-  Place the class-partitioned dataset folders inside `dataset/` and run:
+  Place the class-partitioned dataset folders inside `Dataset/` and run:
   ```bash
   python train.py
   ```
 * **To start the web application**:
-  Ensure `model.keras` is in the root directory and run:
+  Run the Flask server. On the first launch, it will automatically download `model.keras` from Hugging Face if it's not present:
   ```bash
   python app.py
   ```
   Open `http://127.0.0.1:5000` in your web browser.
+
+* **To upload/update the model on Hugging Face**:
+  To update or re-upload your trained `model.keras` to the Hugging Face repository, use the custom upload helper script:
+  ```bash
+  python upload_model.py
+  ```
+  This will prompt you for your Hugging Face write access token and securely handle the upload with a progress bar.
 
 ---
 

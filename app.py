@@ -25,7 +25,23 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Load the trained Keras model and copy weights to a reconstructed Functional model
 # to bypass nested Sequential data augmentation tracing issues during Grad-CAM backpropagation.
-original_model = tf.keras.models.load_model("model.keras")
+MODEL_PATH = "model.keras"
+if not os.path.exists(MODEL_PATH):
+    print("\n[INFO] model.keras not found locally. Attempting to download from Hugging Face Hub (Siddharthv06/BrainTumorAI)...")
+    try:
+        from huggingface_hub import hf_hub_download
+        import shutil
+        downloaded_path = hf_hub_download(
+            repo_id="Siddharthv06/BrainTumorAI",
+            filename="model.keras"
+        )
+        shutil.copy(downloaded_path, MODEL_PATH)
+        print("[INFO] Model downloaded and saved locally successfully.\n")
+    except Exception as e:
+        print(f"[ERROR] Failed to download model from Hugging Face: {e}")
+        print("[ERROR] Please ensure model.keras is placed in the root directory manually.\n")
+
+original_model = tf.keras.models.load_model(MODEL_PATH)
 
 model_input = tf.keras.layers.Input(shape=(128, 128, 3), name='input_layer')
 x = tf.keras.layers.Conv2D(32, (3,3), activation='relu', padding='same', name='conv2d')(model_input)
